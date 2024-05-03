@@ -9,18 +9,29 @@
             <h1>Register</h1>
     </div>
 
-        <input class="p-3 border-[1px] border-slate-500 rounded-sm w-80" placeholder="E-Mail or Phone number" />
+       <form class="flex flex-col gap-5" action="/register-user" method="post">
 
-        <input class="p-3 border-[1px] border-slate-500 rounded-sm w-80" placeholder="Username" />
+        <input class="p-3 border-[1px] border-slate-500 rounded-sm w-80" placeholder="Enter Your Fullname" name="name" />
+
+        <input class="p-3 border-[1px] border-slate-500 rounded-sm w-80" placeholder="E-Mail or Phone number" name="email"/>
+
+        <input class="p-3 border-[1px] border-slate-500 rounded-sm w-80" placeholder="Username" name="username" />
   
-        <input class="p-3 border-[1px] border-slate-500 rounded-sm w-80" placeholder="Password" />
+        <input class="p-3 border-[1px] border-slate-500 rounded-sm w-80" placeholder="********" name="password" />
 
 
-    <div class="flex flex-col space-y-5 w-full">
-        <a class="w-full bg-[#0070ba] rounded-3xl p-3 text-center text-white font-bold transition duration-200 hover:bg-[#003087]" href="/register">Register</a>
-    </div>
-    </div>
+        <div class="flex flex-col space-y-5 w-full">
+            
+            <button class="w-full bg-[#0070ba] rounded-3xl p-3 text-center text-white font-bold transition duration-200 hover:bg-[#003087]">Register</button>
+
+        </div>
+        </div>
+
+       </form>
+
+    
 
 </div>
+
 
   <%- include("./partials/footer") %>
