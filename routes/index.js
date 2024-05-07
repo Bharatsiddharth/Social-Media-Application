@@ -35,12 +35,39 @@ router.get('/about', function(req, res, next) {
 });
 
 router.get('/login', function(req, res, next) {
-  res.render('login', { title: 'Express' });
+  res.render('login');
 });
 
+router.post(
+  "/login-user",
+  passport.authenticate("local", {
+      successRedirect: "/profile",
+      failureRedirect: "/login",
+  }),
+  function (req, res, next) {}
+);
 
-router.get('/profile', function(req, res, next) {
+
+
+
+
+
+router.get('/profile', isLoggedIn, function(req, res, next) {
   res.render('profile');
 });
+
+router.get("/logout-user", function (req, res, next) {
+  req.logout(() => {
+      res.redirect("/login");
+  });
+});
+
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+      next();
+  } else {
+      res.redirect("/login");
+  }
+}
 
 module.exports = router;
