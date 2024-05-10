@@ -4,16 +4,17 @@ var router = express.Router();
 const User = require('../models/userSchema')
 const passport = require('passport');
 const Localstrategy = require('passport-local');
+const user = require('../models/userSchema');
 
 passport.use(new Localstrategy(User.authenticate()));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { user:req.user });
 });
 
 router.get('/register', function(req, res, next) {
-  res.render('register', { title: 'Express' });
+  res.render('register', { user:req.user });
 });
 
 router.post('/register-user',async function(req, res, next) {
@@ -31,11 +32,11 @@ router.post('/register-user',async function(req, res, next) {
 });
 
 router.get('/about', function(req, res, next) {
-  res.render('about', { title: 'Express' });
+  res.render('about', { user:req.user });
 });
 
 router.get('/login', function(req, res, next) {
-  res.render('login');
+  res.render('login', {user:req.user});
 });
 
 router.post(
@@ -53,7 +54,11 @@ router.post(
 
 
 router.get('/profile', isLoggedIn, function(req, res, next) {
-  res.render('profile');
+  res.render('profile', { user:req.user });
+});
+
+router.get('/update-user/:id', isLoggedIn, function(req, res, next) {
+  res.render('updateUser', { user:req.user });
 });
 
 router.get("/logout-user", function (req, res, next) {
