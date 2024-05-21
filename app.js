@@ -23,6 +23,7 @@ var app = express();
 const db = require('./models/connect');
 const user = require('./models/userSchema');
 
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

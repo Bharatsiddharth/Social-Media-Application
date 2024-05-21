@@ -9,8 +9,15 @@
     <div class="p-10 border-[1px] -mt-10 border-slate-200 rounded-md flex flex-col items-center space-y-3">
         <a class="text-red-400" href="/reset-password/<%= user._id%>">ResetPassword</a>
     <div class="py-4 text-2xl flex justify-center items-center flex-col font-bold">
-            <img class="h-20 w-20 my-2 rounded-full" src="https://picsum.photos/id/1027/150/150"/>
+            <!-- <img class="h-20 w-20 my-2 rounded-full" src="https://picsum.photos/id/1027/150/150"/> -->
+            <!-- <img class="preview-image mr-10 w-[20vh] h-[20vh] rounded-full object-cover" src="<%= user.profilepic%>" -->
             <h1><%= user.name %></h1>
+
+            <form class="hidden form-image" action="/image/<%= user._id%>" method="post">
+                <input class="input-image" type="file" name="profilepic">
+            </form>
+
+           
            
     </div>
 
@@ -37,5 +44,16 @@
 
 </div>
 
+<script>
+    const inputimage = document.querySelector(".input-image");
+      const previewimage = document.querySelector(".preview-image")
+      const formimage = document.querySelector(".form-image")
+      previewimage.addEventListener("click", function () {
+        inputimage.click()
+      })
+      inputimage.addEventListener("change", function () {
+        formimage.submit()
+      })
+</script>
 
   <%- include("./partials/footer") %>
