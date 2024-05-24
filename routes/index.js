@@ -9,6 +9,7 @@ const User = require('../models/userSchema')
 const passport = require('passport');
 const Localstrategy = require('passport-local');
 const user = require('../models/userSchema');
+const sendmail = require('../utils/mail');
 
 passport.use(new Localstrategy(User.authenticate()));
 
@@ -145,7 +146,8 @@ router.post("/forget-email", async function (req, res, next) {
       const user = await User.findOne({ email: req.body.email });
 
       if (user) {
-          res.redirect(`/forget-password/${user._id}`);
+          // res.redirect(`/forget-password/${user._id}`);
+          sendmail(res, req.body.email, user);
       } else {
           res.redirect("/forget-email");
       }
@@ -161,8 +163,17 @@ router.get('/forget-password/:id', function(req,res,next){
 router.post("/forget-password/:id", async function (req, res, next) {
   try {
       const user = await User.findById(req.params.id);
-      await user.setPassword(req.body.password);
-      await user.save();
+      // await user.setPassword(req.body.password);
+      // await user.save();
+
+      if (user.resetPasswordToken == 1) {
+        await user.setPassword(req.body.password);
+        user.resetPasswordToken = 0;
+        await user.save();
+      } else {
+          res.send("Link Expired Try Again!");
+      }
+
       res.redirect("/login");
   } catch (error) {
       res.send(error);

@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema(
             ],
         },
         password: String,
+        resetPasswordToken: {
+            type: Number,
+            default: 0,
+        },
     },
     { timestamps: true }
 );
