@@ -1,8 +1,8 @@
 const nodemailer = require("nodemailer");
 
-const sendmail = async (res, email, user) => {
+const sendmail = async (res, user, url) => {
     try {
-        const url = `http://localhost:3000/forget-password/${user._id}`;
+        // const url = `http://localhost:3000/forget-password/${user._id}`;
 
         const transport = nodemailer.createTransport({
             service: "gmail",
@@ -16,7 +16,7 @@ const sendmail = async (res, email, user) => {
 
         const mailOptions = {
             from: "Social Media Private Ltd. <social@media.pvt.ltd>",
-            to: email,
+            to: user.email,
             subject: "Password Reset Link",
             text: "Do not share this link to anyone",
             html: `<a href="${url}">Reset Password Link</a>`,
