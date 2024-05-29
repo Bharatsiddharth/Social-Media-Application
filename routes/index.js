@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-const upload = require("../utils/multer").single("profilepic");
+const upload = require("../utils/multer");
 const fs = require("fs");
 const path = require("path");
 
 const User = require('../models/userSchema')
+const Post = require("../models/postSchema");
 const passport = require('passport');
 const Localstrategy = require('passport-local');
 const user = require('../models/userSchema');
@@ -54,8 +55,13 @@ router.post(
 );
 
 
-router.get('/profile', isLoggedIn, function(req, res, next) {
-  res.render('profile', { user:req.user });
+router.get("/profile", isLoggedIn, async function (req, res, next) {
+  try {
+      const posts = await Post.find().populate("user");
+      res.render("profile", { user: req.user, posts });
+  } catch (error) {
+      res.send(error);
+  }
 });
 
 
@@ -87,7 +93,7 @@ router.post('/reset-password/:id', isLoggedIn,async function(req, res, next) {
 });
 
 
-router.post("/image/:id", isLoggedIn, upload, async function (req, res, next) {
+router.post("/image/:id", isLoggedIn, upload.single("profilepic"), async function (req, res, next) {
   try {
       if (req.user.profilepic !== "default.png") {
           fs.unlinkSync(
@@ -129,6 +135,34 @@ router.get("/delete-user/:id", isLoggedIn, async function (req, res, next) {
       res.send(err);
   }
 });
+
+
+
+router.get('/post-create/', isLoggedIn, function(req, res, next) {
+  res.render('postcreate', { user:req.user });
+});
+
+
+router.post("/post-create/", isLoggedIn, upload.single("media"), async function (req, res, next) {
+  try {
+    const newpost = new Post({
+    title: req.body.title,
+    media: req.file.filename,
+    user: req.user._id,
+    });
+
+    req.user.posts.push(newpost._id);
+
+    await newpost.save();
+    await req.user.save();
+
+    res.redirect("/profile");
+} catch (error) {
+    res.send(err);
+}
+});
+
+
 
 router.get("/logout-user",isLoggedIn, function (req, res, next) {
   req.logout(() => {
