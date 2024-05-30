@@ -55,12 +55,12 @@ router.post(
 );
 
 
-router.get("/profile", isLoggedIn, async function (req, res, next) {
+router.get('/profile', isLoggedIn, async function(req, res, next) {
   try {
-      const posts = await Post.find().populate("user");
-      res.render("profile", { user: req.user, posts });
+    const posts = await Post.find().populate('user');
+    res.render('profile', { user: req.user, posts });
   } catch (error) {
-      res.send(error);
+    res.send(error);
   }
 });
 
@@ -115,6 +115,23 @@ router.post("/image/:id", isLoggedIn, upload.single("profilepic"), async functio
 });
 
 
+router.get("/like/:postid", isLoggedIn, async function (req, res, next) {
+  try {
+      const post = await Post.findById(req.params.postid);
+      if (post.likes.includes(req.user._id)) {
+          post.likes = post.likes.filter((uid) => uid != req.user.id);
+      } else {
+          post.likes.push(req.user._id);
+      }
+      await post.save();
+      res.redirect("/profile");
+  } catch (error) {
+      res.send(error);
+  }
+});
+
+
+
 router.get("/delete-user/:id", isLoggedIn, async function (req, res, next) {
   try {
 
@@ -143,25 +160,29 @@ router.get('/post-create/', isLoggedIn, function(req, res, next) {
 });
 
 
-router.post("/post-create/", isLoggedIn, upload.single("media"), async function (req, res, next) {
-  try {
-    const newpost = new Post({
-    title: req.body.title,
-    media: req.file.filename,
-    user: req.user._id,
-    });
+router.post(
+  "/post-create/",
+  isLoggedIn,
+  upload.single("media"),
+  async function (req, res, next) {
+      try {
+          const newpost = new Post({
+              title: req.body.title,
+              media: req.file.filename,
+              user: req.user._id,
+          });
 
-    req.user.posts.push(newpost._id);
+          req.user.posts.push(newpost._id);
 
-    await newpost.save();
-    await req.user.save();
+          await newpost.save();
+          await req.user.save();
 
-    res.redirect("/profile");
-} catch (error) {
-    res.send(err);
-}
-});
-
+          res.redirect("/profile");
+      } catch (error) {
+          res.send(err);
+      }
+  }
+);
 
 
 router.get("/logout-user",isLoggedIn, function (req, res, next) {
