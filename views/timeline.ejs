@@ -1,0 +1,85 @@
+<%- include("./partials/header") %>
+<!--  -->
+<%- include("./partials/nav") %>
+
+        
+
+            
+        <div
+        class=" flex justify-around items-center rounded-xl mb-8 mt-[6vw] left-[50%] bottom-[5%] translate-x-[120%] w-[30%] py-3   bg-blue-700 text-2xl text-white">
+            <i class="ri-search-line"></i>
+            <a href="/post-create" class="ri-add-large-line"></a>
+            <a href="/update-user/<%= user._id %>" class="">
+                <img class="rounded-full w-[2vmax] h-[2vmax] " src="/images/<%= user.profilepic %>" alt="">
+            </a>
+        </div>
+
+
+
+      <div class="m-auto flex flex-wrap">
+
+        
+
+
+          <div class="bg-gray-100 p-4  flex flex-wrap gap-10 items-center ">
+            <% user.posts.forEach((post)=> { %> 
+              <div class="bg-white border rounded-sm w-[25%]">
+              <div class="flex items-center px-4 py-3">
+                  <img class="h-12 w-12 rounded-full" src="/images/<%=  user.profilepic  %>"/>
+                  <div class="ml-3 ">
+                  <span class="text-sm font-semibold antialiased block leading-tight">
+                    <%=  user.name  %>  
+                  </span>
+                  <span class="text-gray-600 text-xs block">
+                      <%= post.createdAt.toLocaleTimeString()%> |
+                      <%= post.createdAt.toLocaleDateString()%>
+                  </span>
+                  </div>
+              </div>
+              <img src="/images/<%= post.media %>"/>
+              <div class="flex items-center justify-between mx-4 mt-3 mb-2">
+                  <div class="flex gap-5">
+
+
+                        <a href="/like/<%= post._id%>">
+                            <% if(post.likes.includes(user._id)) { %>
+                                <i class="text-2xl text-red-300 ri-heart-3-fill"></i>
+                                <% } else { %>
+                                    <i class="text-2xl ri-heart-3-line"></i>
+                                <% } %>
+                        </a>
+
+                        
+
+
+                  </div>
+                  <div class="flex gap-2">
+                    <a href="/update-post/<%= post._id%>" class="text-2xl text-blue-300 ri-edit-box-line"></a>
+                    <a href="/delete-post/<%= post._id%>" class="text-2xl text-red-300 ri-delete-bin-4-line"></a>
+                  </div>
+              </div>
+              <div class="font-semibold text-sm mx-4 mt-2 mb-4"><%= post.likes.length%> likes</div>
+              </div>
+      
+      
+            
+      
+      
+              <% }) %>     
+      
+      
+      
+      </div>
+
+
+      
+
+      </div>
+
+
+
+    
+
+
+<!--  -->
+<%- include("./partials/footer") %>
