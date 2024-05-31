@@ -176,6 +176,22 @@ router.get("/delete-user/:id", isLoggedIn, async function (req, res, next) {
               )
           );
       }
+
+
+      deleteuser.posts.forEach(async (postid) => {
+        const deletepost = await Post.findByIdAndDelete(postid);
+        fs.unlinkSync(
+          path.join(
+              __dirname,
+              "..",
+              "public",
+              "images",
+              deletepost.media
+          )
+      );
+      });
+
+
       res.redirect(`/login`);
   } catch (error) {
       res.send(err);
