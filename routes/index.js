@@ -85,6 +85,25 @@ router.get('/update-user/:id', isLoggedIn, function(req, res, next) {
   res.render('updateUser', { user:req.user });
 });
 
+router.post('/update-user/:id', isLoggedIn,async function(req, res, next) {
+  try {
+
+    const userUpdate = {...req.body}
+
+    if(req.file){
+      updatedata.profilepic = req.file.filename;
+      fs.unlinkSync(
+        path.join(__dirname, "..", "public" ,"images", req.body.oldprofilepic)
+      )
+    }
+
+    await User.findByIdAndUpdate(req.params.id, userUpdate)
+    res.redirect("/profile")
+  } catch (error) {
+    res.send(error)
+  }
+});
+
 router.get('/reset-password/:id', isLoggedIn, function(req, res, next) {
   res.render('userresetpassword', { user:req.user });
 });

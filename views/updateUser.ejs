@@ -25,6 +25,8 @@
 
        <form class="flex flex-col gap-5" action="/update-user/<%= user._id%>" method="post">
 
+        <input type="hidden" name="oldprofilepic" value="<%= user.profilepic %>">
+
         
 
         <input class="p-3 border-[1px] border-slate-500 rounded-sm w-80" placeholder="Enter Your Fullname" name="name" value="<%= user.name %>" />
