@@ -251,6 +251,47 @@ router.get("/delete-post/:id", isLoggedIn, async function (req, res, next) {
 });
 
 
+router.get("/update-post/:pid", isLoggedIn, async function (req, res, next) {
+  try {
+      const post = await Post.findById(req.params.pid);
+      res.render("postupdate", { user: req.user, post });
+  } catch (error) {
+      res.send(error);
+  }
+});
+
+router.post("/update-post/:pid", isLoggedIn, async function (req, res, next) {
+  try {
+      const updatedPost = await Post.findByIdAndUpdate(req.params.pid, { title: req.body.title }, { new: true });
+      console.log(updatedPost); // Debugging output
+      res.redirect(`/update-post/${req.params.pid}`);
+  } catch (error) {
+      res.send(error);
+  }
+});
+
+
+router.post(
+  "/post-image/:pid",
+  isLoggedIn,
+  upload.single("media"),
+  async function (req, res, next) {
+      try {
+          const post = await Post.findById(req.params.pid);
+          fs.unlinkSync(
+              path.join(__dirname, "..", "public", "images", post.media)
+          );
+
+          post.media = req.file.filename;
+          await post.save();
+          res.redirect(`/update-post/${req.params.pid}`);
+      } catch (error) {
+          res.send(error);
+      }
+  }
+);
+
+
 router.get("/logout-user",isLoggedIn, function (req, res, next) {
   req.logout(() => {
       res.redirect("/login");
